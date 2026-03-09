@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Lexend:wght@100..900&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>Login</title>
+</head>
+<body>
+    <nav>
+        <a href="index.html"><img src="images/Kilchoan Logo.png" alt="Kilchoan Logo"></a>
+    </nav>
+    <div id="main-container">
+        <div class="access-container">
+            <div id="login-image-container"></div>
+            <div class="access-form">
+                <img src="images/Kilchoan Logo.png" alt="Kilchoan Logo">
+                <form method="GET">
+                    <input type="text" class="input-decor" id="login-email" name="login-email" placeholder="Email" required>
+                    <input type="password" class="input-decor" id="login-password" name="login-password" placeholder="Password" required>
+                    <div id="remember-container">
+                        <input type="checkbox" class="input-check" id="remember-user" name="remember-user">
+                        <label id="remember-container" for="remember-user">Remember Me</label>
+                    </div>
+                    <input class="input-submit-decor" type="submit" id="login-submit" name="login-submit" value="LOGIN">
+                </form>
+                <p>Don't have an account? <a href="register.html">Register here.</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

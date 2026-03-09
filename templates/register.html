@@ -1,0 +1,48 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Lexend:wght@100..900&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>Login</title>
+</head>
+<body>
+    <nav>
+        <a href="index.html"><img src="images/Kilchoan Logo.png" alt="Kilchoan Logo"></a>
+    </nav>
+    <div id="main-container">
+        <div id="register-access-form" class="access-container">
+            <div id="register-image-container"></div>
+            <div class="access-form">
+                <img src="images/Kilchoan Logo.png" alt="Kilchoan Logo">
+                <form method="POST">
+                    <input type="text" class="input-decor" id="register-firstname" maxlength="50" name="register-firstname" placeholder="First Name" required>
+                    <input type="text" class="input-decor" id="register-surname" maxlength="50" name="register-surname" placeholder="Surname" required>
+                    <br>
+                    <input type="email" class="input-decor" id="register-email" maxlength="100" name="register-email" placeholder="Email" required>
+                    <input type="password" class="input-decor" id="register-password" maxlength="64" name="register-password" placeholder="Password" required>
+                    <input type="password" class="input-decor" id="register-confirm-password" maxlength="64" name="register-confirm-password" placeholder="Confirm Password" required>
+                    <p id="trust-code-title">Enter Trust Code</p>
+                    <div class="code-input"> <!-- The 5 below inputs will merge into the trust-code through the trustcode.js file -->
+                        <input type="text" maxlength="1" inputmode="text" autocomplete="one-time-code" required>
+                        <input type="text" maxlength="1" inputmode="text" autocomplete="one-time-code" required>
+                        <input type="text" maxlength="1" inputmode="text" autocomplete="one-time-code" required>
+                        <input type="text" maxlength="1" inputmode="text" autocomplete="one-time-code" required>
+                        <input type="text" maxlength="1" inputmode="text" autocomplete="one-time-code" required>
+                    </div>
+                    <input type="hidden" name="trust_code" id="trust_code"> <!-- This is the input to pull the trust code from -->
+                    <input class="input-submit-decor" type="submit" id="register" name="register-submit" value="REGISTER">
+                </form>
+                <p>Already have an account? <a href="index.html">Login here.</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="trustcode.js"></script>
