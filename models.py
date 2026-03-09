@@ -18,11 +18,11 @@ class User(db.Model, UserMixin):
     user_id = db.Column(db.Integer, primary_key = True) #PK
     firstName = db.Column(db.String(50), nullable = False)
     surName = db.Column(db.String(50), nullable = False)
-    password_hash = db.Column(db.String(100), nullable = False)
+    password_hash = db.Column(db.String(200), nullable = False)
     email = db.Column(db.String(100), unique = True, nullable = False)
     is_active = db.Column(db.Boolean, default = False, nullable = False) #unsure if account should be auto set to true or false
     account_creation = db.Column(db.DateTime(timezone = True), server_default=func.now(), nullable = False)
-    account_expiration = db.Column(db.DateTime(timezone = True), server_default=func.now(), nullable = False)
+    account_expiration = db.Column(db.DateTime(timezone = True), server_default=func.now()) #Null for admins
     role_id = db.Column(db.Integer, db.ForeignKey('LU_role.role_id'), nullable = False) #FK
 
     #relationships - these are reverse relationships, which are allowed due to back_populates. letting us do user.reports even without an FK,as there is an FK to User in Report
@@ -196,4 +196,19 @@ class ConservationStatus(db.Model):
     
     #referenced relationships
     conservation_list = relationship('ConservationList', back_populates = 'conservation_statuses')
+    
+#Trust code
+class TrustCodes(db.Model):
+    #name
+    __tablename__ = 'trust_codes'
+    
+    #attibutes
+    trust_code_id = db.Column(db.Integer, primary_key = True)
+    hashed_code = db.Column(db.String(200), nullable = False, unique = True)
+    generated_time = db.Column(db.DateTime(timezone = True), server_default=func.now(), nullable = False)
+    expiration_time = db.Column(db.DateTime(timezone = True), nullable = False)
+    length_of_stay = db.Column(db.Integer) #if null then a staff code
+    role_id = db.Column(db.Integer, db.ForeignKey('LU_role.role_id'), nullable = False)
+    
+    role=relationship('Role')
     
