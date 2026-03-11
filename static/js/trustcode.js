@@ -63,7 +63,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+/** Commented out for testing
 document.querySelector("form").addEventListener("submit", (e) => {
     e.preventDefault(); // stop submit for testing
     console.log("Trust Code:", document.getElementById("trust_code").value);
 });
+**/

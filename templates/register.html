@@ -20,6 +20,14 @@
             <div id="register-image-container"></div>
             <div class="access-form">
                 <img src="images/Kilchoan Logo.png" alt="Kilchoan Logo">
+				
+				{% with messages = get_flashed_messages() %}
+					{% if messages %}
+						{% for message in messages %}
+							<div class="flash-message">{{ message }}</div>
+						{% endfor %}
+					{% endif %}
+				{% endwith %}
                 <form method="POST">
                     <input type="text" class="input-decor" id="register-firstname" maxlength="50" name="register-firstname" placeholder="First Name" required>
                     <input type="text" class="input-decor" id="register-surname" maxlength="50" name="register-surname" placeholder="Surname" required>
@@ -45,4 +53,4 @@
 </body>
 </html>
 
-<script src="trustcode.js"></script>
+<script src="/static/js/trustcode.js"></script>
