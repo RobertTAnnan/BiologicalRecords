@@ -22,7 +22,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(100), unique = True, nullable = False)
     is_active = db.Column(db.Boolean, default = False, nullable = False) #unsure if account should be auto set to true or false
     account_creation = db.Column(db.DateTime(timezone = True), server_default=func.now(), nullable = False)
-    account_expiration = db.Column(db.DateTime(timezone = True), server_default=func.now()) #Null for admins
+    account_expiration = db.Column(db.DateTime(timezone = True)) #Null for admins
     role_id = db.Column(db.Integer, db.ForeignKey('LU_role.role_id'), nullable = False) #FK
 
     #relationships - these are reverse relationships, which are allowed due to back_populates. letting us do user.reports even without an FK,as there is an FK to User in Report

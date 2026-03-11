@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User, Role, TrustCode
+from .models import User, Role, TrustCodes
 from . import db
 from flask_login import current_user, login_user, login_required, logout_user
 from sqlalchemy import func
@@ -17,9 +17,9 @@ def login():
     
     #user submits login details
     if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-        remember = True if request.form.get('remember') else False #remember me
+        email = request.form.get('login-email')
+        password = request.form.get('login-password')
+        remember = True if request.form.get('remember-user') else False #remember me
         
         user = User.query.filter_by(email=email).first() #.first() needed to give a user instance not a query
         
@@ -49,10 +49,12 @@ def register():
        
     #not logged in
     if request.method == 'POST':
-        email = request.form.get('email')
-        firstName = request.form.get('first_name')
-        surName = request.form.get('surname')
-        password = request.form.get('password')
+        email = request.form.get('register-email')
+        firstName = request.form.get('register-firstname')
+        surName = request.form.get('register-surname')
+        password = request.form.get('register-password')
+        
+        confirm_password = request.form.get('register-confirm-password')
         
         #must not have null values
         if email == None or firstName == None or surName == None or password == None:
@@ -70,30 +72,36 @@ def register():
         #Security, make a longer password
         if len(password) < 8:
             flash('Password must be at least 8 characters long')
-            return redirect(url_for('auth.register'))
+            return render_template('register.html')
         
         #Extra security rules, must contain at least 1 upper, lower, number and special character
         if any(i.islower() for i in password) == False:
             flash('Password must have at least one lowercase letter.')
-            return redirect(url_for('auth.register'))
+            return render_template('register.html')
 
         if any(i.isupper() for i in password) == False:
             flash('Password must have at least one uppercase letter.')
-            return redirect(url_for('auth.register'))
+            return render_template('register.html')
 
         if any(i.isdigit() for i in password) == False:
             flash('Password must have at least one number.')
-            return redirect(url_for('auth.register'))
+            return render_template('register.html')
 
         #special characters are not alpha numeric, check for containing a non alpha numeric character
         if any(not i.isalnum() for i in password) == False:
             flash('Password must have at least one special character.')
-            return redirect(url_for('auth.register'))
+            return render_template('register.html')
+            
+        #confirm password
+        if confirm_password != password:
+            flash('Passwords must match')
+            return render_template('register.html')
+        
             
         #Trust code
         trust_code_input = request.form.get('trust_code')
         
-        active_trust_codes = TrustCode.query.filter(TrustCode.expiration_time > func.now()).all() #get all active trust codes
+        active_trust_codes = TrustCodes.query.filter(TrustCodes.expiration_time > func.now()).all() #get all active trust codes
 
         valid_code = None #the valid code
         
@@ -106,7 +114,7 @@ def register():
         
         if not valid_code:
             flash('Please use an active trust code')
-            return redirect(url_for('auth.register'))
+            return render_template('register.html')
         
         account_creation = datetime.now(timezone.utc)
         
@@ -122,7 +130,7 @@ def register():
             email = email, 
             firstName = firstName,
             surName = surName,
-            password = generate_password_hash(password, salt_length=16), #adding salt for additional hashing protection
+            password_hash = generate_password_hash(password, salt_length=16), #adding salt for additional hashing protection
             is_active = True,
             account_creation = account_creation,
             account_expiration = account_expiration,
@@ -142,3 +150,5 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for('main.home')) 
+    
+#Add code for generating trust code - i.e a page for an admin dashboard with user details?
