@@ -1,0 +1,13 @@
+h1 {
+    border: 2px #eee solid;
+    color: rgb(87, 255, 58);
+    text-align: center;
+    padding: 10px;
+}
+
+.grey-box {
+    width: 400px;
+    height: 100px;
+    background-color: #ccc;
+    margin-bottom: 20px;
+}
