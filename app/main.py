@@ -48,4 +48,8 @@ def admin_dashboard():
 
     #add code to allow admin to generate a trust code, need visualisation to do this
     
-    return render_template('admin_dashboard.html', roles=roles, generated_code=generated_code)
+    return render_template('admin_dashboard.html')
+    
+@main.route('/index')
+def index():    
+    return render_template('index.html')
