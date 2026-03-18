@@ -1,5 +1,63 @@
-<h2>Dashboard</h2>
+<h1>Admin Dashboard</h1>
 
-<p>Logged in as {{ current_user.firstName }} {{ current_user.surName }}</p>
+<p>Users: {{ user_count }}</p>
+<p>Trust codes: {{ code_count }}</p>
+<p>Conservation statuses: {{ status_count }}</p>
+<p>Unmatched conservation entries: {{ unmatched_count }}</p>
 
-<a href="/">Home</a>
+<h2>Import taxonomy</h2>
+<form method="POST" action="/admin/import_taxonomy" enctype="multipart/form-data">
+  <input type="file" name="taxonomy_csv">
+  <button>Upload</button>
+</form>
+
+<h2>Import SBL</h2>
+<form method="POST" action="/admin/import_sbl" enctype="multipart/form-data">
+  <input type="file" name="sbl_csv">
+  <button>Upload</button>
+</form>
+
+<h2>Import JNCC</h2>
+<label>Note: This upload takes a very long time</label>
+<form method="POST" action="/admin/import_jncc" enctype="multipart/form-data">
+  <input type="file" name="jncc_csv">
+  <button>Upload</button>
+</form>
+
+<h2>Generate Trust Code</h2>
+<form method="POST" action="/admin/generate_code">
+  <select name="role_id">
+    {% for role in roles %}
+      <option value="{{ role.role_id }}">{{ role.role_name }}</option>
+    {% endfor %}
+  </select>
+  <input type="number" name="length_of_stay">
+  <button>Generate</button>
+</form>
+
+<h2>Users</h2>
+{% for user in users %}
+  <div>
+    {{ user.email }} ({{ user.role.role_name }}) - Active: {{ user.is_active }}
+    <form method="POST" action="/admin/toggle_user/{{ user.user_id }}">
+      <button>Toggle</button>
+    </form>
+  </div>
+{% endfor %}
+
+<h2>Conservation Status</h2>
+{% for s in statuses %}
+  <div>
+    {{ s.conservation_status }} - {{ s.is_sensitive }}
+    <form method="POST" action="/admin/toggle_status/{{ s.conservation_status_id }}">
+      <button>Toggle</button>
+    </form>
+  </div>
+{% endfor %}
+
+<h2>Unmatched Conservation Entries</h2>
+{% for e in unmatched %}
+  <div>
+    {{ e.scientific_name }} - {{ e.conservation_status.conservation_status }}
+  </div>
+{% endfor %}

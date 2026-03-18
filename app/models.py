@@ -44,12 +44,14 @@ class Taxonomy(db.Model):
     taxonomy_id = db.Column(db.Integer, primary_key = True) #PK
     scientific_name = db.Column(db.String(100), nullable = False)
     vernacular_name = db.Column(db.String(100))
-    gbif_taxonomy_id = db.Column(db.String(100))
+    gbif_taxonomy_id = db.Column(db.String(100), unique = True, index = True)
     gbif_taxonomy_url = db.Column(db.String(200))
     authority_id = db.Column(db.Integer, db.ForeignKey('LU_authority.authority_id')) #FK
     data_source_id = db.Column(db.Integer, db.ForeignKey('LU_data_source.data_source_id')) #FK
     taxonomy_rank_id = db.Column(db.Integer, db.ForeignKey('LU_taxonomy_rank.taxonomy_rank_id')) #FK
     parent_id = db.Column(db.Integer, db.ForeignKey('taxonomy.taxonomy_id')) #FK
+    
+    is_protected = db.Column(db.Boolean, nullable = False, default = False, index = True) #is it sensitive data?
     
     #reverse relationships
     reports = relationship('Report', back_populates = 'taxonomy')
@@ -174,8 +176,7 @@ class ConservationList(db.Model):
 
     #attributes
     conservation_list_id = db.Column(db.Integer, primary_key = True)
-    conservation_list_name = db.Column(db.String(200), nullable = False)
-    conservation_list_url = db.Column(db.String(200))
+    conservation_list_name = db.Column(db.String(200), nullable = False, unique = True)
     
     #reverse relationships
     conservation_statuses = relationship('ConservationStatus', back_populates = 'conservation_list')
@@ -188,8 +189,9 @@ class ConservationStatus(db.Model):
     #attributes
     conservation_status_id = db.Column(db.Integer, primary_key = True)
     conservation_status = db.Column(db.String(50), nullable = False)
-    status_meaning = db.Column(db.Text)
+    is_sensitive = db.Column(db.Boolean, nullable = False, default = False)
     conservation_list_id = db.Column(db.Integer, db.ForeignKey('LU_conservation_list.conservation_list_id'), nullable = False)
+    
 
     #reverse relationships
     taxonomy_links = relationship('TaxonomyConservationStatus', back_populates = 'conservation_status')
@@ -210,5 +212,27 @@ class TrustCodes(db.Model):
     length_of_stay = db.Column(db.Integer) #if null then a staff code
     role_id = db.Column(db.Integer, db.ForeignKey('LU_role.role_id'), nullable = False)
     
-    role=relationship('Role')
+    role = relationship('Role')
+    
+    
+    
+
+
+#A holding table for entries from conservation lists  
+class ConservationEntry(db.Model):
+    #name
+    __tablename__ = 'conservation_entry'
+
+    conservation_entry_id = db.Column(db.Integer, primary_key=True)
+    scientific_name = db.Column(db.String(200), nullable=False, index=True)
+    gbif_taxonomy_id = db.Column(db.String(100), nullable=True, index=True)
+    conservation_list_id = db.Column(db.Integer, db.ForeignKey('LU_conservation_list.conservation_list_id'), nullable = False)
+    conservation_status_id = db.Column(db.Integer, db.ForeignKey('LU_conservation_status.conservation_status_id'), nullable = False)
+    taxonomy_id = db.Column(db.Integer, db.ForeignKey('taxonomy.taxonomy_id'), nullable = True)
+    imported_at = db.Column(db.DateTime(timezone = True), server_default=func.now(), nullable = False)
+
+    #relationships
+    conservation_list = relationship('ConservationList')
+    conservation_status = relationship('ConservationStatus')
+    taxonomy = relationship('Taxonomy')
     

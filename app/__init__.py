@@ -7,7 +7,6 @@ import os
 from dotenv import load_dotenv
 from flask_migrate import Migrate
 
-#https://www.digitalocean.com/community/tutorials/how-to-add-authentication-to-your-app-with-flask-login reference
 
 #use flask sqlAlchemy for database
 #database
@@ -26,9 +25,10 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = (f"mysql+pymysql://flask_account:{password}@localhost/biological_records") #mysql
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
-    #for file uploading
-    #app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static/uploads')
-	
+    app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static/data')
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok = True)
+ 
+ 
 	# Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db) #flask migrate
@@ -51,6 +51,11 @@ def create_app():
     
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
+    
+    """
+    from .records import records as records_blueprint
+    app.register_blueprint(records_blueprint)
+    """
     
     return app
     
